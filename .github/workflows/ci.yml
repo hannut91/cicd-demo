@@ -29,3 +29,13 @@ jobs:
       run: |
         docker login -u hannut1 -p ${{ secrets.DOCKER_PASSWORD }}
         docker push hannut1/cicd-demo
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ec2-52-78-89-144.ap-northeast-2.compute.amazonaws.com
+        username: ec2-user
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          docker pull hannut1/cicd-demo
+          docker stop server
+          docker run -d --rm --name server -p 80:3000 hannut1/cicd-demo
