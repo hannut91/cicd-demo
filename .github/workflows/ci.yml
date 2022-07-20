@@ -24,12 +24,15 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - name: Docker build
+      if: github.ref == 'refs/heads/main'
       run: docker build . -t hannut1/cicd-demo:${GITHUB_SHA::7} --platform linux/amd64
     - name: Docker push
+      if: github.ref == 'refs/heads/main'
       run: |
         docker login -u hannut1 -p ${{ secrets.DOCKER_PASSWORD }}
         docker push hannut1/cicd-demo:${GITHUB_SHA::7}
     - name: Deploy
+      if: github.ref == 'refs/heads/main'
       uses: appleboy/ssh-action@master
       with:
         host: ec2-52-78-89-144.ap-northeast-2.compute.amazonaws.com
