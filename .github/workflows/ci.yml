@@ -23,4 +23,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: docker build . -t hannut1/cicd-demo --platform linux/amd64
+    - name: Docker build
+      run: docker build . -t hannut1/cicd-demo --platform linux/amd64
+    - name: Docker push
+      run: |
+        docker login -u hannut1 -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push hannut1/cicd-demo
